@@ -1,15 +1,7 @@
-import express from 'express'
+import { httpServer } from './src/server.js'
 
-const app = express()
-const PORT = process.env.PORT || 4000
+const PORT = 4000
 
-app.get('/', (req, res) => {
-  res.send('Hello, World!')
-})
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`)
-})
-
-app.get('/respuesta', (req, res) => {
-  res.json({ message: 'Esta es una respuesta JSON' })
+httpServer.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`)
 })
