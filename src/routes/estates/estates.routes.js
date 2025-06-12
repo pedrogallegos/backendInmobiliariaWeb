@@ -1,5 +1,5 @@
-import express from 'express'
-import { createEstate, getAllEstates, getEstateByIdOrSlug, updateEstate, deleteEstate } from '../../useCases/estates/estates.useCases.js'
+import express, { request } from 'express'
+import { createEstate, getAllEstates, getEstateByIdorSlug, updateEstate, deleteEstate } from '../../useCases/estates/estates.useCases.js'
 const router = express.Router()
 
 // Post /estates
@@ -8,8 +8,8 @@ router.post('/', async (request, response, next) => {
     const body = request.body
     const estate = await createEstate(body)
     response.status(201).json({
-      success: true,
-      message: 'Property created successfully',
+      sucess: true,
+      message: 'Propierty created succesfully',
       data: estate
     })
   } catch (error) {
@@ -20,21 +20,21 @@ router.get('/', async (request, response, next) => {
   try {
     const estates = await getAllEstates()
     response.status(200).json({
-      success: true,
-      message: 'Properties retrieved successfully',
+      sucess: true,
+      message: 'Propierties retrieved sucessfully',
       data: estates
     })
   } catch (error) {
     next(error)
   }
 })
-router.get('/:identifier', async (request, response, next) => {
+router.get('/:id', async (request, response, next) => {
   try {
     const { identifier } = request.params
-    const estate = await getEstateByIdOrSlug(identifier)
+    const estate = await getEstateByIdorSlug(identifier)
     response.status(200).json({
-      success: true,
-      message: 'Property retrieved successfully',
+      sucess: true,
+      message: 'Propierty retrieved succesfully',
       data: estate
     })
   } catch (error) {
@@ -46,9 +46,9 @@ router.patch('/:identifier', async (request, response, next) => {
     const { identifier } = request.params
     const body = request.body
     const estate = await updateEstate(identifier, body)
-    response.status(200).json({
-      success: true,
-      message: 'Property updated successfully',
+    response.status(202).json({
+      sucess: true,
+      message: 'Propierty update sucessfully',
       data: estate
     })
   } catch (error) {
@@ -60,8 +60,8 @@ router.delete('/:identifier', async (request, response, next) => {
     const { identifier } = request.params
     const estate = await deleteEstate(identifier)
     response.status(200).json({
-      success: true,
-      message: 'Property deleted',
+      sucess: true,
+      message: 'Propierty deleted',
       data: estate
     })
   } catch (error) {
