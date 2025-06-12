@@ -7,7 +7,7 @@ async function createEstate (estateData) {
   // Validate that the estate name is provided
   const existingEstate = await Estate.findOne({ name })
   if (existingEstate) { // Check if an estate with the same name already exists
-    throw new Error(`Estate with this name already exists${name}`)
+    throw new Error(`Estate with this name already exists: ${name}`)
   }
   // Create and return the new estate
   const newEstate = await Estate.create(estateData)
@@ -19,7 +19,7 @@ async function getAllEstates () {
   return estates
 }
 // Get Estate by ID or slug
-async function getEstateByIdorSlug (identifier) {
+async function getEstateByIdOrSlug (identifier) {
   const isObjectId = isValidObjectId(identifier)
   let estate
   if (isObjectId) {
@@ -27,45 +27,47 @@ async function getEstateByIdorSlug (identifier) {
   } else {
     estate = await Estate.findOne({ slug: identifier }) // Find by Slug
   }
-  // Validate if the state exist
+  // Validate if the estate exist
   if (!estate) {
-    throw new Error(`The state doesn't exist with the identifier: ${identifier}`)
+    throw new Error(`The estate doesn't exist with the identifier: ${identifier}`)
   }
+  return estate
 }
 
 // Update a estate
 
 async function updateEstate (identifier, newData) {
   const isObjectId = isValidObjectId(identifier)
-  let updateEstate
+  let updatedEstate
   if (isObjectId) {
-    updateEstate = await Estate.findByIdAndUpdate(identifier, newData, { new: true })
+    updatedEstate = await Estate.findByIdAndUpdate(identifier, newData, { new: true })
   } else {
-    updateEstate = await Estate.findOneAndUpdate({ slug: identifier }, newData, { new: true })
+    updatedEstate = await Estate.findOneAndUpdate({ slug: identifier }, newData, { new: true })
   }
-  if (!updateEstate) {
-    throw new Error(`The state doesn't exist with the identifier: ${identifier}`)
+  if (!updatedEstate) {
+    throw new Error(`The estate doesn't exist with the identifier: ${identifier}`)
   }
-  return updateEstate
+  return updatedEstate
 }
 
 async function deleteEstate (identifier) {
   const isObjectId = isValidObjectId(identifier)
-  let deleteEstate
+  let deletedEstate
   if (isObjectId) {
-    deleteEstate = await Estate.findByIdAndDelete(identifier)
+    deletedEstate = await Estate.findByIdAndDelete(identifier)
   } else {
-    deleteEstate = await Estate.findOneAndDelete({ slug: identifier })
+    deletedEstate = await Estate.findOneAndDelete({ slug: identifier })
   }
-  if (!deleteEstate) {
-    throw new Error(`The state doesn't exist with the identifier: ${identifier}`)
+  if (!deletedEstate) {
+    throw new Error(`The estate doesn't exist with the identifier: ${identifier}`)
   }
+  return deletedEstate
 }
 
 export {
   createEstate,
   getAllEstates,
-  getEstateByIdorSlug,
+  getEstateByIdOrSlug,
   updateEstate,
   deleteEstate
 }
