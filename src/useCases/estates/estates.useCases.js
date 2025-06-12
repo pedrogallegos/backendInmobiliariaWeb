@@ -1,7 +1,6 @@
 // CRUD estates use cases
 import { isValidObjectId } from 'mongoose'
 import { Estate } from '../../models/index.js'
-
 // Create a new estate
 async function createEstate (estateData) {
   const { name } = estateData
@@ -34,8 +33,39 @@ async function getEstateByIdorSlug (identifier) {
   }
 }
 
+// Update a estate
+
+async function updateEstate (identifier, newData) {
+  const isObjectId = isValidObjectId(identifier)
+  let updateEstate
+  if (isObjectId) {
+    updateEstate = await Estate.findByIdAndUpdate(identifier, newData, { new: true })
+  } else {
+    updateEstate = await Estate.findOneAndUpdate({ slug: identifier }, newData, { new: true })
+  }
+  if (!updateEstate) {
+    throw new Error(`The state doesn't exist with the identifier: ${identifier}`)
+  }
+  return updateEstate
+}
+
+async function deleteEstate (identifier) {
+  const isObjectId = isValidObjectId(identifier)
+  let deleteEstate
+  if (isObjectId) {
+    deleteEstate = await Estate.findByIdAndDelete(identifier)
+  } else {
+    deleteEstate = await Estate.findOneAndDelete({ slug: identifier })
+  }
+  if (!deleteEstate) {
+    throw new Error(`The state doesn't exist with the identifier: ${identifier}`)
+  }
+}
+
 export {
   createEstate,
   getAllEstates,
-  getEstateByIdorSlug
+  getEstateByIdorSlug,
+  updateEstate,
+  deleteEstate
 }
