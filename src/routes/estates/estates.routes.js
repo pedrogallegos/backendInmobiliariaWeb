@@ -7,7 +7,7 @@ router.post('/', async (request, response, next) => {
   try {
     const body = request.body
     const estate = await createEstate(body)
-    response.json(201).json({
+    response.status(201).json({
       sucess: true,
       message: 'Propierty created succesfully',
       data: estate
