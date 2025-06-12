@@ -10,7 +10,6 @@ const estatesSchema = new Schema({
   },
   slug: {
     type: String,
-    required: true,
     trim: true
   },
   description: {
@@ -39,17 +38,14 @@ const estatesSchema = new Schema({
   location_map: {
     // TODO: Especify the type for location_map
     latitude: {
-      type: Number,
-      required: true
+      type: Number
     },
     longitude: {
-      type: Number,
-      required: true
+      type: Number
     }
   },
   address: {
-    type: String,
-    required: true
+    type: String
   },
   city: {
     type: String,
@@ -94,8 +90,7 @@ const estatesSchema = new Schema({
   },
   images: [{
     type: [Schema.Types.ObjectId],
-    ref: 'Multimedia', // Reference to the Images model for estate images
-    required: true // Ensure that at least one image is associated with the estate
+    ref: 'Multimedia' // Reference to the Images model for estate images
   }],
   image_cover: {
     type: Schema.Types.ObjectId,
