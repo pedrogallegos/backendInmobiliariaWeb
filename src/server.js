@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import http from 'http'
 import { estatesRoutes } from './routes/estates/estates.routes.js' // Import routes for estates
+import { amenitiesRoutes } from './routes/amenities/amenities.routes.js'
 import handlerErrors from './middleware/handlerErrors.js'
 const app = express() // Create an Express application
 app.use(cors()) // Enable CORS for all routes
@@ -11,6 +12,7 @@ const httpServer = http.createServer(app) // Create an HTTP server using the Exp
 
 // Routes
 app.use('/estates', estatesRoutes)
+app.use('/amenities', amenitiesRoutes)
 app.get('/', (req, res) => {
   res.json({
     api: 'Api de ejemplo', //
