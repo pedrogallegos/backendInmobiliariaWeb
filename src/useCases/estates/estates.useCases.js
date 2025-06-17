@@ -1,13 +1,14 @@
 // CRUD estates use cases
 import { isValidObjectId } from 'mongoose'
 import { Estate } from '../../models/index.js'
+import { StatusHttp } from '../../lib/statusHttp.js'
 // Create a new estate
 async function createEstate (estateData) {
   const { name } = estateData
   // Validate that the estate name is provided
   const existingEstate = await Estate.findOne({ name })
   if (existingEstate) { // Check if an estate with the same name already exists
-    throw new Error(`Estate with this name already exists: ${name}`)
+    throw new StatusHttp(`Estate with this name already exists: ${name}`, 400)
   }
   // Create and return the new estate
   const newEstate = await Estate.create(estateData)
@@ -19,6 +20,11 @@ async function getAllEstates () {
   return estates
 }
 // Get Estate by ID or slug
+/**
+ *
+ * @param {String} identifier - Can be an ID from MongoDB or a Slug
+ * @returns {Promise<Estate>} - Return a promise that solves an Object Estate
+ */
 async function getEstateByIdOrSlug (identifier) {
   const isObjectId = isValidObjectId(identifier)
   let estate
@@ -29,12 +35,18 @@ async function getEstateByIdOrSlug (identifier) {
   }
   // Validate if the estate exist
   if (!estate) {
-    throw new Error(`The estate doesn't exist with the identifier: ${identifier}`)
+    throw new StatusHttp(`The estate doesn't exist with the identifier: ${identifier}`, 404)
   }
   return estate
 }
 
-// Update a estate
+// Update an estate
+/**
+ *
+ * @param {*} identifier - Can be a MongoDB ID or a Slug
+ * @param {*} newData - Object within the new data for a property
+ * @returns {Promise,<Estate>} - Returns a promise that resolves an object for the updated property
+ */
 
 async function updateEstate (identifier, newData) {
   const isObjectId = isValidObjectId(identifier)
@@ -45,11 +57,15 @@ async function updateEstate (identifier, newData) {
     updatedEstate = await Estate.findOneAndUpdate({ slug: identifier }, newData, { new: true })
   }
   if (!updatedEstate) {
-    throw new Error(`The estate doesn't exist with the identifier: ${identifier}`)
+    throw new StatusHttp(`The estate doesn't exist with the identifier: ${identifier}`, 404)
   }
   return updatedEstate
 }
-
+/**
+ *
+ * @param {String} identifier - Can be an ID from MongoDB or a slug
+ * @returns {Promise,<Estate>} - Returns a promise when the property has been removed
+ */
 async function deleteEstate (identifier) {
   const isObjectId = isValidObjectId(identifier)
   let deletedEstate
@@ -59,7 +75,7 @@ async function deleteEstate (identifier) {
     deletedEstate = await Estate.findOneAndDelete({ slug: identifier })
   }
   if (!deletedEstate) {
-    throw new Error(`The estate doesn't exist with the identifier: ${identifier}`)
+    throw new StatusHttp(`The estate doesn't exist with the identifier: ${identifier}`, 404)
   }
   return deletedEstate
 }
