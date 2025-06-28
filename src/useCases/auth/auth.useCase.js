@@ -19,6 +19,10 @@ async function registerUser (data) {
   const hashedPassword = await bcrypt.hashPassword(password)
   // Create the new user with the hashed password
   const newUser = await User.create({ ...data, password: hashedPassword })
+  // Send the validation by email
+  // Here you can implement the logic to send a validation email
+  const token = generateToken({ userId: newUser._id, role: newUser.role })
+  await sendValdationEmail(newUser.email, newUser._id, token)
   return newUser
 }
 async function login (data) {

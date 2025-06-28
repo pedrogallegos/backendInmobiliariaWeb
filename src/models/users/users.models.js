@@ -9,6 +9,11 @@ const userSchema = new Schema({
     type: String,
     trim: true
   },
+  active: {
+    type: Boolean,
+    default: true,
+    required: [true, 'The active status of the user is required']
+  },
   email: {
     type: String,
     required: [true, 'The email of the user is required'],
