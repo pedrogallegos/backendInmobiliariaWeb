@@ -15,7 +15,11 @@ async function createEstate (estateData) {
   return newEstate
 }
 // Get all the estates
-async function getAllEstates () {
+async function getAllEstates (user) {
+  // Show properties only if the user is admin
+  if (user.role !== 'admin') {
+    throw new StatusHttp('You are not authorized to view all estates', 403)
+  }
   const estates = await Estate.find({})
   return estates
 }

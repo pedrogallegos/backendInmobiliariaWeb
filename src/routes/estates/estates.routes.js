@@ -1,5 +1,6 @@
 import express from 'express'
 import { createEstate, getAllEstates, getEstateByIdOrSlug, updateEstate, deleteEstate } from '../../useCases/estates/estates.useCases.js'
+import { authenticate } from '../../middleware/auth.js'
 const router = express.Router()
 
 // Post /estates
@@ -16,9 +17,9 @@ router.post('/', async (request, response, next) => {
     next(error)
   }
 })
-router.get('/', async (request, response, next) => {
+router.get('/', authenticate, async (request, response, next) => {
   try {
-    const estates = await getAllEstates()
+    const estates = await getAllEstates(request.user.role)
     response.status(200).json({
       success: true,
       message: 'Properties retrieved successfully',
